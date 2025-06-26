@@ -124,7 +124,7 @@ const localImageEvents = {
         className: 'popup-quest'
     },
     quest_completed: {
-        image: 'images/events/quest-complete.png',
+        image: 'images/events/quest-completed.png',
         title: 'Mission Accomplie !',
         description: 'Tu as terminé ta mission avec succès !',
         className: 'popup-quest-complete'
