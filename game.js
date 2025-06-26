@@ -556,8 +556,15 @@ function updateQuestDisplay() {
         const progress = getQuestProgress(quest);
         const progressText = quest.completed ? 'TERMINÉE' : `${progress}/${quest.target}`;
         
+        // Afficher l'objectif ajusté selon le niveau
+        let difficultyIndicator = '';
+        if (quest.target > quest.originalTarget) {
+            const multiplier = quest.target / quest.originalTarget;
+            difficultyIndicator = ` <span style="color: #e74c3c; font-weight: bold;">(x${multiplier.toFixed(1)})</span>`;
+        }
+        
         questDiv.innerHTML = `
-            <div class="quest-title">${quest.icon} ${quest.title}</div>
+            <div class="quest-title">${quest.icon} ${quest.title}${difficultyIndicator}</div>
             <div class="quest-progress">${quest.description.replace('{target}', quest.target)} - ${progressText}</div>
             <div class="quest-reward">Récompense: ${quest.rewards.gold} or, ${quest.rewards.exp} XP</div>
         `;
@@ -643,6 +650,8 @@ function claimQuestReward(questIndex) {
         showMessage(`${player.name}, tu réclames ta récompense pour "${quest.title}" : ${quest.rewards.gold} or et ${quest.rewards.exp} XP !`);
         showNotification(`Récompense réclamée !`);
         
+        resetQuestStats(quest.type);
+        
         completedQuests.push(quest);
         activeQuests.splice(questIndex, 1);
         
@@ -651,12 +660,18 @@ function claimQuestReward(questIndex) {
     }
 }
 
+
 function createQuest(templateKey) {
     const template = questTemplates[templateKey];
     if (!template) return null;
     
+    const levelMultiplier = Math.pow(2, player.level - 1);
+    const adjustedTarget = Math.floor(template.target * levelMultiplier);
+    
     return {
         ...template,
+        target: adjustedTarget,
+        originalTarget: template.target, 
         completed: false,
         startTime: Date.now()
     };
@@ -676,6 +691,35 @@ function getAvailableQuest() {
     
     const randomTemplate = availableTemplates[Math.floor(Math.random() * availableTemplates.length)];
     return createQuest(randomTemplate);
+}
+
+function resetQuestStats(questType) {
+    switch(questType) {
+        case 'kill':
+            player.stats.enemiesKilled = 0;
+            showNotification('Compteur d\'ennemis remis à zéro');
+            break;
+        case 'treasure':
+            player.stats.treasuresFound = 0;
+            showNotification('Compteur de trésors remis à zéro');
+            break;
+        case 'explore':
+            player.stats.explorations = 0;
+            showNotification('Compteur d\'explorations remis à zéro');
+            break;
+        case 'potion':
+            player.stats.potionsUsed = 0;
+            showNotification('Compteur de potions remis à zéro');
+            break;
+        case 'spend':
+            player.stats.goldSpent = 0;
+            showNotification('Compteur d\'or dépensé remis à zéro');
+            break;
+        case 'level':
+            break;
+        default:
+            console.warn('Type de quête inconnu:', questType);
+    }
 }
 
 function meetQuestGiver() {
@@ -712,8 +756,19 @@ function meetQuestGiver() {
     showMessage(`${giver.name} : "${giver.dialogue}"`);
     
     setTimeout(() => {
-        showMessage(`Mission proposée: "${availableQuest.title}" - ${availableQuest.description.replace('{target}', availableQuest.target)}`);
+        let difficultyMessage = '';
+        if (availableQuest.target > availableQuest.originalTarget) {
+            const multiplier = availableQuest.target / availableQuest.originalTarget;
+            difficultyMessage = ` <span style="color: #e74c3c;">(Difficulté x${multiplier.toFixed(1)} - Niveau ${player.level})</span>`;
+        }
+        
+        showMessage(`Mission proposée: "${availableQuest.title}"${difficultyMessage} - ${availableQuest.description.replace('{target}', availableQuest.target)}`);
         addMessage(`<strong>Récompenses:</strong> ${availableQuest.rewards.gold} or et ${availableQuest.rewards.exp} XP`);
+        
+        // Message explicatif pour le joueur
+        if (availableQuest.target > availableQuest.originalTarget) {
+            addMessage(`<em>Les objectifs des quêtes augmentent avec ton niveau ! Plus tu es fort, plus les défis sont grands.</em>`);
+        }
         
         const acceptBtn = document.createElement('button');
         acceptBtn.textContent = '✅ Accepter la mission';
