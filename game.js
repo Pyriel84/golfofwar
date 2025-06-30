@@ -1397,12 +1397,6 @@ function updateQuestDisplay() {
         const progress = getQuestProgress(quest);
         const progressText = quest.completed ? 'TERMINÉE' : `${progress}/${quest.target}`;
         
-        let difficultyIndicator = '';
-        if (quest.target > quest.originalTarget) {
-            const multiplier = quest.target / quest.originalTarget;
-            difficultyIndicator = ` <span style="color: #e74c3c; font-weight: bold;">(x${multiplier.toFixed(1)})</span>`;
-        }
-        
         questDiv.innerHTML = `
             <div class="quest-title">${quest.icon} ${quest.title}${difficultyIndicator}</div>
             <div class="quest-progress">${quest.description.replace('{target}', quest.target)} - ${progressText}</div>
@@ -1497,51 +1491,8 @@ const claimQuestReward = questIndex => {
         
         updateUI();
         updateQuestDisplay();
-        
-        setTimeout(() => {
-            addMessage("");
-
-            const continueBtn = document.createElement('button');
-            continueBtn.textContent = '🚀 Continuer l\'aventure';
-            continueBtn.className = 'quest-continue-button';
-            continueBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-            continueBtn.style.border = '2px solid #f1c40f';
-            continueBtn.style.color = 'white';
-            continueBtn.style.padding = '12px 24px';
-            continueBtn.style.borderRadius = '8px';
-            continueBtn.style.cursor = 'pointer';
-            continueBtn.style.fontWeight = 'bold';
-            continueBtn.style.fontSize = '1em';
-            continueBtn.style.margin = '10px auto';
-            continueBtn.style.display = 'block';
-            continueBtn.style.transition = 'all 0.3s ease';
-            
-            continueBtn.addEventListener('mouseenter', () => {
-                continueBtn.style.transform = 'scale(1.05)';
-                continueBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-            });
-            
-            continueBtn.addEventListener('mouseleave', () => {
-                continueBtn.style.transform = 'scale(1)';
-                continueBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-            });
-            
-            continueBtn.addEventListener('click', () => {
-                if (continueBtn.parentNode) {
-                    continueBtn.parentNode.removeChild(continueBtn);
-                }
-                
-                changeGameState(GAME_STATES.EXPLORING);
-                showMessage(`${player.name}, tu reprends ton exploration avec tes nouvelles récompenses !`);
-            });
-            
-            const story = safeGetElement('story');
-            if (story) {
-                story.appendChild(continueBtn);
-            }
-        }, 1000); 
     }
-};
+}
 
 function createQuest(templateKey) {
     const template = questTemplates[templateKey];
@@ -1646,10 +1597,6 @@ function meetQuestGiver() {
         
         showMessage(`Mission proposée: "${availableQuest.title}"${difficultyMessage} - ${availableQuest.description.replace('{target}', availableQuest.target)}`);
         addMessage(`<strong>Récompenses:</strong> ${availableQuest.rewards.gold} or et ${availableQuest.rewards.exp} XP`);
-        
-        if (availableQuest.target > availableQuest.originalTarget) {
-            addMessage(`<em>Les objectifs des quêtes augmentent avec ton niveau ! Plus tu es fort, plus les défis sont grands.</em>`);
-        }
         
         const acceptBtn = document.createElement('button');
         acceptBtn.textContent = '✅ Accepter la mission';
@@ -2471,9 +2418,3 @@ if (document.readyState === 'loading') {
 } else {
     initializeGame();
 }
-
-console.log('🎮 Jeu Gold of War initialisé avec succès !');
-console.log('💡 Fonctions de debug disponibles :');
-console.log('   - debugTriggerBoss(niveau) : Force un boss à apparaître');
-console.log('   - player : Accès aux données du joueur');
-console.log('   - currentGameState : État actuel du jeu');
