@@ -1,4 +1,4 @@
-     // Fonction utilitaire pour fermer le modal d'événement
+       // Fonction utilitaire pour fermer le modal d'événement
         function closeEventModal() {
             const modal = document.getElementById('eventModal');
             if (modal) {
@@ -450,13 +450,20 @@
                 }
 
                 try {
-                    imageContainer.innerHTML = `<div style="width: 100%; height: 200px; background: #34495e; border-radius: 15px; 
-                        display: flex; align-items: center; justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
-                        <div style="text-align: center; color: #f39c12;">
-                            <div style="font-size: 4em; margin-bottom: 10px;">🎮</div>
-                            <div style="font-size: 1.2em; font-weight: bold;">${eventData.title}</div>
+                    // Essayer d'afficher la vraie image d'abord
+                    imageContainer.innerHTML = `
+                        <img src="${eventData.image}" 
+                             alt="${eventData.title}" 
+                             style="max-width: 100%; max-height: 300px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); border: 3px solid #f39c12;"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div style="width: 100%; height: 200px; background: #34495e; border-radius: 15px; 
+                             display: none; align-items: center; justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
+                            <div style="text-align: center; color: #f39c12;">
+                                <div style="font-size: 4em; margin-bottom: 10px;">🎮</div>
+                                <div style="font-size: 1.2em; font-weight: bold;">${eventData.title}</div>
+                            </div>
                         </div>
-                    </div>`;
+                    `;
                     title.textContent = eventData.title;
                     description.textContent = eventData.description;
                     overlay.style.display = 'flex';
