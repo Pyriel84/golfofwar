@@ -329,6 +329,34 @@ button:disabled {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
+.quest-continue-button {
+    background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+    border: 2px solid #f1c40f !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    font-size: 1em !important;
+    margin: 10px auto !important;
+    display: block !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.quest-continue-button:hover {
+    transform: scale(1.05) !important;
+    background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.quest-continue-button:active {
+    transform: scale(0.98) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
 @keyframes questButtonGlow {
     0% { box-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
     50% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.8); }
