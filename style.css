@@ -17,11 +17,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-<<<<<<< HEAD
-    background-image: url('/images/locations/depart.png');
-=======
     background-image: url('images/locations/depart.png');
->>>>>>> 4269616ba83582d1b5696136b5704c28ee6c7347
     background-size: cover;
     background-position: center;
     border-radius: 15px;
@@ -226,6 +222,28 @@ button:disabled {
     background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
 }
 
+.shop-button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: 2px solid #3498db;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.shop-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+.shop-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 /* ========== PANNEAU ENNEMI ========== */
 #enemy-info {
     display: none;
@@ -311,6 +329,16 @@ button:disabled {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
+@keyframes questButtonGlow {
+    0% { box-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
+}
+
+.quest-complete {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    border-left: 4px solid #f1c40f;
+}
 /* ========== NOTIFICATIONS ========== */
 .notification {
     position: fixed;
