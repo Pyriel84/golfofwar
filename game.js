@@ -14,24 +14,48 @@
             GAME_OVER: 'game_over'
         };
 
-        const localImageEvents = {
-            combat: {
-                goblin: { image: 'images/enemies/gobelin.png', title: 'Un Goblin Apparaît !', description: 'Un goblin sournois sort de derrière un rocher !', className: 'popup-combat' },
-                dragon: { image: 'images/enemies/dragon.png', title: 'DRAGON ANCIEN !', description: 'Le dragon rugit, ses écailles brillent !', className: 'popup-combat' },
-                orc: { image: 'images/enemies/orc.png', title: 'Un Orc Sauvage !', description: 'Un orc féroce brandit sa hache !', className: 'popup-combat' },
-                troll: { image: 'images/enemies/troll.png', title: 'Un Troll Énorme !', description: 'Le troll grogne, prêt à attaquer !', className: 'popup-combat' },
-                skeleton: { image: 'images/enemies/squelette.png', title: 'Un Squelette Errant !', description: 'Un squelette hante les lieux, prêt à attaquer !', className: 'popup-combat' }
-            },
-            treasure: { image: 'images/events/tresor.png', title: 'Trésor Découvert !', description: 'Un coffre rempli d\'or étincelant !', className: 'popup-treasure' },
-            levelup: { image: 'images/events/level-up.png', title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !', className: 'popup-level' },
-            potion: { image: 'images/events/potion.png', title: 'Potion Trouvée !', description: 'Une potion mystérieuse qui pourrait t\'aider !', className: 'popup-item' },
-            merchant: { image: 'images/events/merchant.png', title: 'Marchand Mystérieux !', description: 'Un marchand apparaît et te propose des objets !', className: 'popup-merchant' },
-            trap: { image: 'images/events/trap.png', title: 'Piège Mortel !', description: 'Tu tombes dans un piège ! Fais attention !', className: 'popup-trap' },
-            rest: { image: 'images/events/repos.png', title: 'Repos Bien Mérité !', description: 'Tu trouves un endroit paisible pour te reposer.', className: 'popup-rest' },
-            nothing: { image: 'images/locations/depart.png', title: 'Rien Trouvé !', description: 'Tu fouilles les lieux, mais ne trouves rien d\'utile.', className: 'popup-nothing' },
-            boss: { image: 'images/enemies/boss.png', title: 'Un Boss Apparait !', description: 'Un puissant boss se dresse devant toi !', className: 'popup-boss' },
-            game_over: { image: 'images/events/game-over.png', title: 'Jeu Terminé !', description: 'Tu as perdu... Recommence ton aventure !', className: 'popup-game-over' }
-        };
+const localImageEvents = {
+    combat: {
+        goblin: { image: 'images/enemies/gobelin.png', title: 'Un Goblin Apparaît !', description: 'Un goblin sournois sort de derrière un rocher !', className: 'popup-combat' },
+        dragon: { image: 'images/enemies/dragon.png', title: 'DRAGON ANCIEN !', description: 'Le dragon rugit, ses écailles brillent !', className: 'popup-combat' },
+        orc: { image: 'images/enemies/orc.png', title: 'Un Orc Sauvage !', description: 'Un orc féroce brandit sa hache !', className: 'popup-combat' },
+        troll: { image: 'images/enemies/troll.png', title: 'Un Troll Énorme !', description: 'Le troll grogne, prêt à attaquer !', className: 'popup-combat' },
+        skeleton: { image: 'images/enemies/squelette.png', title: 'Un Squelette Errant !', description: 'Un squelette hante les lieux, prêt à attaquer !', className: 'popup-combat' }
+    },
+    treasure: { image: 'images/events/tresor.png', title: 'Trésor Découvert !', description: 'Un coffre rempli d\'or étincelant !', className: 'popup-treasure' },
+    
+    // ========== NOUVELLES ENTRÉES POUR LES QUÊTES ==========
+    quest: {
+        npc_found: { 
+            image: 'images/events/npc.png', 
+            title: 'PNJ Rencontré !', 
+            description: 'Un personnage t\'approche avec une mission !', 
+            className: 'popup-quest' 
+        },
+        quest_available: { 
+            image: 'images/events/quest.png', 
+            title: 'Nouvelle Mission !', 
+            description: 'Une nouvelle quête t\'attend !', 
+            className: 'popup-quest' 
+        },
+        quest_completed: { 
+            image: 'images/events/quest-complete.png', 
+            title: 'Quête Terminée !', 
+            description: 'Tu as accompli ta mission avec succès !', 
+            className: 'popup-quest-complete' 
+        },
+        quest_reward: { 
+            image: 'images/events/reward.png', 
+            title: 'Récompense !', 
+            description: 'Tu réclames ta récompense bien méritée !', 
+            className: 'popup-reward' 
+        }
+    },
+    
+    levelup: { image: 'images/events/level-up.png', title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !', className: 'popup-level' },
+    // ... reste du code existant
+};
+
 
         const enemies = {
             goblin: { name: 'Gobelin', health: 30, maxHealth: 30, attack: 8, defense: 2, exp: 15, gold: [5, 15] },
