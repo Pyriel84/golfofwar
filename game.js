@@ -146,101 +146,7 @@ const localImageEvents = {
 let currentGameState = GAME_STATES.EXPLORING;
 let currentEnemy = null;
 
-const levelBosses = {
-    5: {
-        name: 'Capitaine Gobelin',
-        health: 120,
-        maxHealth: 120,
-        attack: 18,
-        defense: 8,
-        exp: 75,
-        gold: [30, 60],
-        image: 'goblin',
-        title: 'BOSS DE NIVEAU 5',
-        description: 'Le chef des gobelins te défie !',
-        rareItem: {
-            name: 'Épée du Capitaine',
-            type: 'weapon',
-            attack: 8,
-            special: 'goblinSlayer',
-            description: '+50% dégâts contre les gobelins'
-        },
-        pattern: 'aggressive',
-        phase2Trigger: 0.3,
-        defeatMessage: 'Le Capitaine Gobelin tombe ! Tu prouves ta valeur !'
-    },
-    10: {
-        name: 'Gardien de la Forêt',
-        health: 200,
-        maxHealth: 200,
-        attack: 25,
-        defense: 12,
-        exp: 150,
-        gold: [50, 100],
-        image: 'troll',
-        title: 'BOSS DE NIVEAU 10',
-        description: 'L\'ancien gardien de la forêt se réveille !',
-        rareItem: {
-            name: 'Armure d\'Écorce',
-            type: 'armor',
-            defense: 8,
-            special: 'regeneration',
-            description: 'Régénère 5 PV par tour'
-        },
-        pattern: 'healing',
-        healAmount: 25,
-        defeatMessage: 'Le Gardien retourne dormir dans la forêt éternelle.'
-    },
-    15: {
-        name: 'Sorcier des Ombres',
-        health: 180,
-        maxHealth: 180,
-        attack: 35,
-        defense: 6,
-        exp: 200,
-        gold: [75, 125],
-        image: 'skeleton',
-        title: 'BOSS DE NIVEAU 15',
-        description: 'Un sorcier maléfique maîtrise les ombres !',
-        rareItem: {
-            name: 'Orbe des Ombres',
-            type: 'accessory',
-            attack: 5,
-            special: 'lifesteal',
-            description: 'Vole 25% des dégâts infligés en PV'
-        },
-        pattern: 'magical',
-        magicAttackChance: 0.4,
-        defeatMessage: 'Les ombres se dispersent, la lumière revient !'
-    },
-    20: {
-        name: 'Dragon Adolescent',
-        health: 350,
-        maxHealth: 350,
-        attack: 40,
-        defense: 15,
-        exp: 300,
-        gold: [100, 200],
-        image: 'dragon',
-        title: 'BOSS DE NIVEAU 20',
-        description: 'Un jeune dragon défend son territoire !',
-        rareItem: {
-            name: 'Écaille de Dragon',
-            type: 'shield',
-            defense: 12,
-            special: 'fireResistance',
-            description: 'Résiste aux attaques de feu'
-        },
-        pattern: 'fire',
-        fireAttackDamage: 60,
-        defeatMessage: 'Le dragon s\'envole, reconnaissant ta force !'
-    }
-};
-
 // Variables pour gérer les boss
-let currentBossData = null;
-let bossPhase = 1;
-let bossTurnCounter = 0;
 
 const levelBosses = {
     5: {
@@ -538,7 +444,6 @@ const itemSellPrices = {
     'Gemme précieuse': 50
 };
 
-let domElements = {};
 
 // ========== FONCTIONS UTILITAIRES ==========
 function initializeDOMElements() {
@@ -2662,10 +2567,10 @@ function validateSaveData(data) {
     
     return requiredFields.every(field => {
         const value = data.player[field];
-        return value !== undefined && 
-               value !== null && 
-               (typeof value === 'number' || typeof value === 'string') &&
-               (typeof value === 'string' || !isNaN(Number(value)));
+        return value !== undefined &&
+            value !== null &&
+            (typeof value === 'number' || typeof value === 'string') &&
+            (!isNaN(Number(value)));
     });
 }
 
