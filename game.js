@@ -8,25 +8,25 @@
 
         const localImageEvents = {
             combat: {
-                goblin: { title: 'Un Goblin Apparaît !', description: 'Un goblin sournois sort de derrière un rocher !', className: 'popup-combat' },
-                orc: { title: 'Un Orc Sauvage !', description: 'Un orc féroce brandit sa hache !', className: 'popup-combat' },
-                troll: { title: 'Un Troll Énorme !', description: 'Le troll grogne, prêt à attaquer !', className: 'popup-combat' },
-                bandit: { title: 'Bandits !', description: 'Des bandits t\'attaquent pour ton or !', className: 'popup-combat' }
+                goblin: { image: 'images/enemies/gobelin.png', title: 'Un Goblin Apparaît !', description: 'Un goblin sournois sort de derrière un rocher !', className: 'popup-combat' },
+                orc: { image: 'images/enemies/orc.png', title: 'Un Orc Sauvage !', description: 'Un orc féroce brandit sa hache !', className: 'popup-combat' },
+                troll: { image: 'images/enemies/troll.png', title: 'Un Troll Énorme !', description: 'Le troll grogne, prêt à attaquer !', className: 'popup-combat' },
+                bandit: { image: 'images/enemies/bandit.png', title: 'Bandits !', description: 'Des bandits t\'attaquent pour ton or !', className: 'popup-combat' }
             },
-            treasure: { title: 'Trésor Découvert !', description: 'Un coffre rempli d\'or étincelant !', className: 'popup-treasure' },
-            levelup: { title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !', className: 'popup-level' },
+            treasure: { image: 'images/events/tresor.png', title: 'Trésor Découvert !', description: 'Un coffre rempli d\'or étincelant !', className: 'popup-treasure' },
+            levelup: { image: 'images/events/level-up.png', title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !', className: 'popup-level' },
             
             npc: {
-                aldric: { title: 'Aldric le Forgeron', description: 'Le forgeron du village t\'appelle avec ses mains noircies par la suie...', className: 'modal-aldric' },
-                gareth: { title: 'Gareth le Guerrier', description: 'Un guerrier expérimenté aux nombreuses cicatrices te fait signe...', className: 'modal-gareth' },
-                marcus: { title: 'Marcus le Mage', description: 'Un mage mystérieux en robe violette t\'observe avec intérêt...', className: 'modal-marcus' },
-                vera: { title: 'Vera l\'Alchimiste', description: 'Une alchimiste aux yeux verts te sourit depuis son laboratoire...', className: 'modal-alchemist' }
+                aldric: { image: 'images/npcs/aldric.png', title: 'Aldric le Forgeron', description: 'Le forgeron du village t\'appelle avec ses mains noircies par la suie...', className: 'modal-aldric' },
+                gareth: { image: 'images/npcs/gareth.png', title: 'Gareth le Guerrier', description: 'Un guerrier expérimenté aux nombreuses cicatrices te fait signe...', className: 'modal-gareth' },
+                marcus: { image: 'images/npcs/marcus.png', title: 'Marcus le Mage', description: 'Un mage mystérieux en robe violette t\'observe avec intérêt...', className: 'modal-marcus' },
+                vera: { image: 'images/npcs/vera.png', title: 'Vera l\'Alchimiste', description: 'Une alchimiste aux yeux verts te sourit depuis son laboratoire...', className: 'modal-alchemist' }
             },
             
             events: {
-                merchant: { title: 'Marchand Voyageur', description: 'Un marchand itinérant te propose des affaires !', className: 'popup-merchant' },
-                shrine: { title: 'Sanctuaire Ancien', description: 'Un sanctuaire mystérieux pulse d\'une énergie divine...', className: 'popup-shrine' },
-                bandits: { title: 'Embuscade !', description: 'Des bandits te bloquent le passage !', className: 'popup-danger' }
+                merchant: { image: 'images/events/merchant.png', title: 'Marchand Voyageur', description: 'Un marchand itinérant te propose des affaires !', className: 'popup-merchant' },
+                shrine: { image: 'images/events/shrine.png', title: 'Sanctuaire Ancien', description: 'Un sanctuaire mystérieux pulse d\'une énergie divine...', className: 'popup-shrine' },
+                bandits: { image: 'images/events/bandits.png', title: 'Embuscade !', description: 'Des bandits te bloquent le passage !', className: 'popup-danger' }
             }
         };
 
@@ -194,7 +194,7 @@
             vera: { level: 0, points: 0, thresholds: [0, 90, 220, 450], ranks: ['Curieux', 'Assistant', 'Alchimiste', 'Maître'] }
         };
 
-        // ========== CLASSE PRINCIPALE ==========
+      // ========== CLASSE PRINCIPALE ==========
         class RPGGame {
             constructor() {
                 this.state = GAME_STATES.EXPLORING;
@@ -463,31 +463,59 @@
 
                 content.className = `modal-content ${eventData.className || ''}`;
 
-                let iconEmoji = '📜';
-                if (eventType === 'combat') iconEmoji = '⚔️';
-                else if (eventType === 'treasure') iconEmoji = '💰';
-                else if (eventType === 'levelup') iconEmoji = '⭐';
-                else if (subType === 'aldric') iconEmoji = '🔨';
-                else if (subType === 'gareth') iconEmoji = '⚔️';
-                else if (subType === 'marcus') iconEmoji = '🔮';
-                else if (subType === 'vera') iconEmoji = '🧪';
-                else if (eventType === 'events') {
-                    if (subType === 'merchant') iconEmoji = '🛒';
-                    else if (subType === 'shrine') iconEmoji = '⛩️';
-                    else if (subType === 'bandits') iconEmoji = '🏴‍☠️';
+                // ========== UTILISER VOS VRAIES IMAGES ==========
+                if (eventData.image) {
+                    // Essayer d'afficher l'image réelle
+                    imageContainer.innerHTML = `
+                        <img src="${eventData.image}" 
+                             alt="${eventData.title}" 
+                             style="max-width: 100%; max-height: 200px; border-radius: 15px; 
+                                    border: 3px solid #f39c12; box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+                                    object-fit: cover;"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="width: 100%; height: 150px; background: rgba(52, 73, 93, 0.8); 
+                                    border-radius: 15px; display: none; align-items: center; 
+                                    justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
+                            <div style="text-align: center; color: #f39c12;">
+                                <div style="font-size: 3.5em; margin-bottom: 8px;">${this.getEventEmoji(eventType, subType)}</div>
+                                <div style="font-size: 1em; font-weight: bold;">${eventData.title}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Fallback avec emoji si pas d'image définie
+                    const iconEmoji = this.getEventEmoji(eventType, subType);
+                    imageContainer.innerHTML = `
+                        <div style="width: 100%; height: 150px; background: rgba(52, 73, 93, 0.8); 
+                                    border-radius: 15px; display: flex; align-items: center; 
+                                    justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
+                            <div style="text-align: center; color: #f39c12;">
+                                <div style="font-size: 3.5em; margin-bottom: 8px;">${iconEmoji}</div>
+                                <div style="font-size: 1em; font-weight: bold;">${eventData.title}</div>
+                            </div>
+                        </div>
+                    `;
                 }
-
-                imageContainer.innerHTML = `<div style="width: 100%; height: 150px; background: rgba(52, 73, 93, 0.8); border-radius: 15px; 
-                    display: flex; align-items: center; justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
-                    <div style="text-align: center; color: #f39c12;">
-                        <div style="font-size: 3.5em; margin-bottom: 8px;">${iconEmoji}</div>
-                        <div style="font-size: 1em; font-weight: bold;">${eventData.title}</div>
-                    </div>
-                </div>`;
 
                 title.textContent = eventData.title;
                 description.textContent = eventData.description;
                 overlay.style.display = 'flex';
+            }
+
+            getEventEmoji(eventType, subType) {
+                if (eventType === 'combat') return '⚔️';
+                if (eventType === 'treasure') return '💰';
+                if (eventType === 'levelup') return '⭐';
+                if (subType === 'aldric') return '🔨';
+                if (subType === 'gareth') return '⚔️';
+                if (subType === 'marcus') return '🔮';
+                if (subType === 'vera') return '🧪';
+                if (eventType === 'events') {
+                    if (subType === 'merchant') return '🛒';
+                    if (subType === 'shrine') return '⛩️';
+                    if (subType === 'bandits') return '🏴‍☠️';
+                }
+                return '📜';
             }
 
             showNameModal() {
