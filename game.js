@@ -6,25 +6,6 @@ const GAME_STATES = {
     GAME_OVER: 'game_over'
 };
 
-const localImageEvents = {
-    combat: {
-        goblin: { image: 'images/enemies/gobelin.png', title: 'Un Goblin Apparaît !', description: 'Un goblin sournois sort de derrière un rocher !', className: 'popup-combat' },
-        dragon: { image: 'images/enemies/dragon.png', title: 'DRAGON ANCIEN !', description: 'Le dragon rugit, ses écailles brillent !', className: 'popup-combat' },
-        orc: { image: 'images/enemies/orc.png', title: 'Un Orc Sauvage !', description: 'Un orc féroce brandit sa hache !', className: 'popup-combat' },
-        troll: { image: 'images/enemies/troll.png', title: 'Un Troll Énorme !', description: 'Le troll grogne, prêt à attaquer !', className: 'popup-combat' },
-        skeleton: { image: 'images/enemies/squelette.png', title: 'Un Squelette Errant !', description: 'Un squelette hante les lieux, prêt à attaquer !', className: 'popup-combat' }
-    },
-    treasure: { image: 'images/events/tresor.png', title: 'Trésor Découvert !', description: 'Un coffre rempli d\'or étincelant !', className: 'popup-treasure' },
-    levelup: { image: 'images/events/level-up.png', title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !', className: 'popup-level' },
-    potion: { image: 'images/events/potion.png', title: 'Potion Trouvée !', description: 'Une potion mystérieuse qui pourrait t\'aider !', className: 'popup-item' },
-    merchant: { image: 'images/events/merchant.png', title: 'Marchand Mystérieux !', description: 'Un marchand apparaît et te propose des objets !', className: 'popup-merchant' },
-    trap: { image: 'images/events/trap.png', title: 'Piège Mortel !', description: 'Tu tombes dans un piège ! Fais attention !', className: 'popup-trap' },
-    rest: { image: 'images/events/repos.png', title: 'Repos Bien Mérité !', description: 'Tu trouves un endroit paisible pour te reposer.', className: 'popup-rest' },
-    nothing: { image: 'images/locations/depart.png', title: 'Rien Trouvé !', description: 'Tu fouilles les lieux, mais ne trouves rien d\'utile.', className: 'popup-nothing' },
-    boss: { image: 'images/enemies/boss.png', title: 'Un Boss Apparait !', description: 'Un puissant boss se dresse devant toi !', className: 'popup-boss' },
-    game_over: { image: 'images/events/game-over.png', title: 'Jeu Terminé !', description: 'Tu as perdu... Recommence ton aventure !', className: 'popup-game-over' }
-};
-
 const enemies = {
     goblin: { name: 'Gobelin', health: 30, maxHealth: 30, attack: 8, defense: 2, exp: 15, gold: [5, 15] },
     orc: { name: 'Orc', health: 50, maxHealth: 50, attack: 12, defense: 4, exp: 25, gold: [10, 25] },
@@ -51,12 +32,10 @@ const levelBosses = {
         defense: 8,
         exp: 75,
         gold: [30, 60],
-        image: 'goblin',
         title: 'BOSS DE NIVEAU 5',
         description: 'Le chef des gobelins te défie ! Il porte un casque trois fois trop grand.',
         rareItem: {
             name: 'Épée du Capitaine',
-            type: 'weapon',
             attack: 8,
             description: 'Une épée légendaire du capitaine gobelin'
         },
@@ -70,12 +49,10 @@ const levelBosses = {
         defense: 12,
         exp: 150,
         gold: [50, 100],
-        image: 'troll',
         title: 'BOSS DE NIVEAU 10',
         description: 'L\'ancien gardien de la forêt se réveille !',
         rareItem: {
             name: 'Armure d\'Écorce',
-            type: 'armor',
             defense: 8,
             description: 'Une armure qui régénère la santé'
         },
@@ -141,8 +118,6 @@ class RPGGame {
             defense: 5,
             inventory: ['épée rouillée'],
             defeatedBosses: [],
-            class: null,
-            skills: [],
             stats: {
                 enemiesKilled: 0,
                 treasuresFound: 0,
@@ -410,108 +385,6 @@ class RPGGame {
         if (modal) modal.style.display = 'none';
     }
 
-    // ========== SYSTÈME DE MODALS ==========
-    showEventModal(eventType, subType = null) {
-        this.ensureModalExists();
-        
-        const overlay = document.getElementById('eventModal');
-        const content = document.getElementById('eventModalContent');
-        const imageContainer = document.getElementById('modalImageContainer');
-        const title = document.getElementById('modalTitle');
-        const description = document.getElementById('modalDescription');
-
-        if (!overlay || !content || !imageContainer || !title || !description) {
-            console.error('Impossible de créer les éléments du modal');
-            return;
-        }
-
-        let eventData;
-        
-        if (subType && localImageEvents[eventType]?.[subType]) {
-            eventData = localImageEvents[eventType][subType];
-        } else if (localImageEvents[eventType]) {
-            eventData = localImageEvents[eventType];
-        } else {
-            // Fallback si pas d'image
-            eventData = {
-                image: 'placeholder.png',
-                title: 'Événement',
-                description: 'Quelque chose se passe !',
-                className: 'popup-default'
-            };
-        }
-
-        try {
-            imageContainer.innerHTML = `<div style="width: 100%; height: 200px; background: #34495e; border-radius: 15px; 
-                display: flex; align-items: center; justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
-                <div style="text-align: center; color: #f39c12;">
-                    <div style="font-size: 4em; margin-bottom: 10px;">🎮</div>
-                    <div style="font-size: 1.2em; font-weight: bold;">${eventData.title}</div>
-                </div>
-            </div>`;
-            title.textContent = eventData.title;
-            description.textContent = eventData.description;
-            overlay.style.display = 'flex';
-        } catch (error) {
-            console.error('Erreur lors de l\'affichage du modal:', error);
-        }
-    }
-
-    ensureModalExists() {
-        if (!document.getElementById('eventModal')) {
-            const modalHTML = `
-                <div id="eventModal" class="modal-overlay" style="
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                    background: rgba(0,0,0,0.8); display: none; align-items: center;
-                    justify-content: center; z-index: 1000;">
-                    <div id="eventModalContent" class="modal-content" style="
-                        background: white; padding: 20px; border-radius: 15px;
-                        max-width: 500px; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-                        <div class="modal-header">
-                            <h3 id="modalTitle" class="modal-title">Titre de l'événement</h3>
-                            <button id="modalCloseBtn" class="modal-close" style="
-                                float: right; background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="modalImageContainer" class="modal-image-container"></div>
-                            <p id="modalDescription" class="modal-description">Description de l'événement</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="modalContinueBtn" class="modal-button" style="
-                                background: #3498db; color: white; border: none; padding: 10px 20px;
-                                border-radius: 5px; cursor: pointer;">Continuer l'aventure</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            // Ajouter les event listeners pour fermer le modal
-            const closeBtn = document.getElementById('modalCloseBtn');
-            const continueBtn = document.getElementById('modalContinueBtn');
-            const modal = document.getElementById('eventModal');
-            
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                });
-            }
-            
-            if (continueBtn) {
-                continueBtn.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                });
-            }
-            
-            // Fermer en cliquant à l'extérieur
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        }
-    }
-
     // ========== GESTION DES ÉTATS ==========
     changeGameState(newState) {
         this.state = newState;
@@ -625,7 +498,6 @@ class RPGGame {
         this.player.attack += 2;
         this.player.defense += 1;
 
-        this.showEventModal('levelup');
         this.showNotification(`NIVEAU ${this.player.level} !`);
         this.showMessage(`Félicitations ${this.player.name} ! Tu atteins le niveau ${this.player.level} ! Tes statistiques ont augmenté !`);
         
@@ -764,7 +636,6 @@ class RPGGame {
         
         this.currentBossData = bossData;
         
-        this.showEventModal('boss');
         this.showMessage(`🔥 ${bossData.title} 🔥`);
         this.addMessage(`${bossData.description}`);
         this.addMessage(`💀 ${bossData.name} possède ${bossData.health} PV et une ${bossData.rareItem.name} légendaire !`);
@@ -783,19 +654,33 @@ class RPGGame {
             font-size: 1.2em;
             margin: 15px auto;
             display: block;
+            animation: pulse 1.5s infinite;
         `;
         
         startCombatBtn.addEventListener('click', () => {
             if (startCombatBtn.parentNode) {
                 startCombatBtn.parentNode.removeChild(startCombatBtn);
             }
-            document.getElementById('eventModal').style.display = 'none';
             this.startBossCombat();
         });
         
         const story = this.safeGetElement('story');
         if (story) {
             story.appendChild(startCombatBtn);
+        }
+        
+        // Ajouter l'animation CSS si elle n'existe pas
+        if (!document.getElementById('bossAnimation')) {
+            const style = document.createElement('style');
+            style.id = 'bossAnimation';
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
         }
     }
 
@@ -890,18 +775,12 @@ class RPGGame {
 
     handleEnemyEncounter() {
         this.currentEnemy = this.getRandomEnemy();
-        const enemyType = Object.keys(enemies).find(key => 
-            enemies[key].name === this.currentEnemy.name
-        );
-        
-        this.showEventModal('combat', enemyType);
         this.showMessage(`${this.currentEnemy.name} apparaît ! Prépare-toi au combat, ${this.player.name} !`);
         this.changeGameState(GAME_STATES.COMBAT);
         this.updateEnemyUI();
     }
 
     handleTreasure() {
-        this.showEventModal('treasure');
         this.player.stats.treasuresFound++;
         
         const goldFound = Math.floor(Math.random() * 20) + 10;
@@ -921,7 +800,6 @@ class RPGGame {
     }
 
     handleMerchant() {
-        this.showEventModal('merchant');
         const merchantGold = Math.floor(Math.random() * 20) + 5;
         this.player.gold += merchantGold;
         this.showMessage(`${this.player.name}, un marchand mystérieux te donne ${merchantGold} pièces d'or !`);
@@ -930,7 +808,6 @@ class RPGGame {
     }
 
     handlePotionFind() {
-        this.showEventModal('potion');
         const potionTypes = ['Potion de soin', 'Grande potion'];
         const foundPotion = potionTypes[Math.floor(Math.random() * potionTypes.length)];
         this.player.inventory.push(foundPotion);
@@ -940,7 +817,6 @@ class RPGGame {
     }
 
     handleTrap() {
-        this.showEventModal('trap');
         const damage = Math.floor(Math.random() * 15) + 5;
         this.player.health = Math.max(0, this.player.health - damage);
         this.showMessage(`${this.player.name}, tu tombes dans un piège ! Tu perds ${damage} PV.`);
@@ -953,7 +829,6 @@ class RPGGame {
     }
 
     handleRestArea() {
-        this.showEventModal('rest');
         const healAmount = Math.floor(this.player.maxHealth * 0.3);
         this.player.health = Math.min(this.player.maxHealth, this.player.health + healAmount);
         this.showMessage(`${this.player.name}, tu te reposes et récupères ${healAmount} PV.`);
@@ -962,7 +837,6 @@ class RPGGame {
     }
 
     handleNothing() {
-        this.showEventModal('nothing');
         const messages = [
             `${this.player.name} avance prudemment...`,
             `Le vent souffle doucement...`,
@@ -974,7 +848,6 @@ class RPGGame {
 
     handleGameOver() {
         this.hideAllButtons();
-        this.showEventModal('game_over');
         this.showMessage(`${this.player.name} est mort... Ton aventure se termine ici.`);
         this.changeGameState(GAME_STATES.GAME_OVER);
     }
