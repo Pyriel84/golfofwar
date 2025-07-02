@@ -385,6 +385,136 @@ class RPGGame {
         if (modal) modal.style.display = 'none';
     }
 
+    // ========== SYSTÈME DE MODALS ==========
+    showEventModal(eventType, subType = null) {
+        this.ensureModalExists();
+        
+        const overlay = document.getElementById('eventModal');
+        const content = document.getElementById('eventModalContent');
+        const imageContainer = document.getElementById('modalImageContainer');
+        const title = document.getElementById('modalTitle');
+        const description = document.getElementById('modalDescription');
+
+        if (!overlay || !content || !imageContainer || !title || !description) {
+            console.error('Impossible de créer les éléments du modal');
+            return;
+        }
+
+        // Données par défaut pour chaque type d'événement
+        const eventData = this.getEventData(eventType, subType);
+
+        try {
+            imageContainer.innerHTML = `<div style="width: 100%; height: 200px; background: ${eventData.bgColor}; border-radius: 15px; 
+                display: flex; align-items: center; justify-content: center; border: 3px solid #f39c12; margin: 10px 0;">
+                <div style="text-align: center; color: #f39c12;">
+                    <div style="font-size: 4em; margin-bottom: 10px;">${eventData.emoji}</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">${eventData.title}</div>
+                </div>
+            </div>`;
+            title.textContent = eventData.title;
+            description.textContent = eventData.description;
+            overlay.style.display = 'flex';
+        } catch (error) {
+            console.error('Erreur lors de l\'affichage du modal:', error);
+        }
+    }
+
+    getEventData(eventType, subType) {
+        const eventMappings = {
+            combat: {
+                goblin: { emoji: '👹', bgColor: '#e74c3c', title: 'Un Goblin Apparaît !', description: 'Un goblin sournois sort de derrière un rocher !' },
+                dragon: { emoji: '🐉', bgColor: '#e74c3c', title: 'DRAGON ANCIEN !', description: 'Le dragon rugit, ses écailles brillent !' },
+                orc: { emoji: '👹', bgColor: '#e74c3c', title: 'Un Orc Sauvage !', description: 'Un orc féroce brandit sa hache !' },
+                troll: { emoji: '👹', bgColor: '#e74c3c', title: 'Un Troll Énorme !', description: 'Le troll grogne, prêt à attaquer !' },
+                skeleton: { emoji: '💀', bgColor: '#e74c3c', title: 'Un Squelette Errant !', description: 'Un squelette hante les lieux !' }
+            },
+            treasure: { emoji: '💰', bgColor: '#f39c12', title: 'Trésor Découvert !', description: 'Un coffre rempli d\'or étincelant !' },
+            levelup: { emoji: '⭐', bgColor: '#9b59b6', title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !' },
+            potion: { emoji: '🧪', bgColor: '#1abc9c', title: 'Potion Trouvée !', description: 'Une potion mystérieuse qui pourrait t\'aider !' },
+            merchant: { emoji: '🧙‍♂️', bgColor: '#3498db', title: 'Marchand Mystérieux !', description: 'Un marchand apparaît et te propose des objets !' },
+            trap: { emoji: '⚠️', bgColor: '#e67e22', title: 'Piège Mortel !', description: 'Tu tombes dans un piège ! Fais attention !' },
+            rest: { emoji: '🏕️', bgColor: '#27ae60', title: 'Repos Bien Mérité !', description: 'Tu trouves un endroit paisible pour te reposer.' },
+            nothing: { emoji: '🌫️', bgColor: '#95a5a6', title: 'Rien Trouvé !', description: 'Tu fouilles les lieux, mais ne trouves rien d\'utile.' },
+            boss: { emoji: '👑', bgColor: '#8e44ad', title: 'Un Boss Apparait !', description: 'Un puissant boss se dresse devant toi !' },
+            game_over: { emoji: '💀', bgColor: '#c0392b', title: 'Jeu Terminé !', description: 'Tu as perdu... Recommence ton aventure !' },
+            quest_given: { emoji: '📜', bgColor: '#3498db', title: 'Nouvelle Mission !', description: 'Un PNJ t\'a confié une mission importante !' },
+            quest_completed: { emoji: '✅', bgColor: '#27ae60', title: 'Mission Accomplie !', description: 'Tu as terminé ta mission avec succès !' },
+            quest_reward: { emoji: '🎁', bgColor: '#f39c12', title: 'Récompense Obtenue !', description: 'Tu récupères ta récompense bien méritée !' },
+            no_quest: { emoji: '🤷‍♂️', bgColor: '#95a5a6', title: 'Aucune Mission', description: 'Personne n\'a besoin d\'aide pour le moment.' }
+        };
+
+        if (subType && eventMappings[eventType] && eventMappings[eventType][subType]) {
+            return eventMappings[eventType][subType];
+        } else if (eventMappings[eventType]) {
+            return eventMappings[eventType];
+        } else {
+            return { emoji: '🎮', bgColor: '#34495e', title: 'Événement', description: 'Quelque chose se passe !' };
+        }
+    }
+
+    ensureModalExists() {
+        if (!document.getElementById('eventModal')) {
+            const modalHTML = `
+                <div id="eventModal" class="modal-overlay" style="
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.8); display: none; align-items: center;
+                    justify-content: center; z-index: 1000;">
+                    <div id="eventModalContent" class="modal-content" style="
+                        background: white; padding: 20px; border-radius: 15px;
+                        max-width: 500px; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div class="modal-header">
+                            <h3 id="modalTitle" class="modal-title" style="margin: 0 0 10px 0;">Titre de l'événement</h3>
+                            <button id="modalCloseBtn" class="modal-close" style="
+                                float: right; background: none; border: none; font-size: 24px; 
+                                cursor: pointer; position: absolute; top: 10px; right: 15px;">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="modalImageContainer" class="modal-image-container"></div>
+                            <p id="modalDescription" class="modal-description">Description de l'événement</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="modalContinueBtn" class="modal-button" style="
+                                background: #3498db; color: white; border: none; padding: 10px 20px;
+                                border-radius: 5px; cursor: pointer; font-weight: bold;">Continuer l'aventure</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Ajouter les event listeners pour fermer le modal
+            const closeBtn = document.getElementById('modalCloseBtn');
+            const continueBtn = document.getElementById('modalContinueBtn');
+            const modal = document.getElementById('eventModal');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            if (continueBtn) {
+                continueBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            // Fermer en cliquant à l'extérieur
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    }
+
+    closeEventModal() {
+        const modal = document.getElementById('eventModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
     // ========== GESTION DES ÉTATS ==========
     changeGameState(newState) {
         this.state = newState;
@@ -533,6 +663,7 @@ class RPGGame {
             const progress = this.getQuestProgress(quest);
             if (progress >= (quest.target || 0)) {
                 quest.completed = true;
+                this.showEventModal('quest_completed');
                 this.showNotification(`Quête terminée: ${quest.title}`);
                 this.showMessage(`${this.player.name}, tu as terminé la quête "${quest.title}" ! Tu peux maintenant réclamer ta récompense !`);
             }
@@ -546,6 +677,7 @@ class RPGGame {
         const quest = this.activeQuests[questIndex];
         if (!quest || !quest.completed || !quest.rewards) return;
         
+        this.showEventModal('quest_reward');
         this.player.gold += quest.rewards.gold || 0;
         this.gainExp(quest.rewards.exp || 0);
         
@@ -706,6 +838,7 @@ class RPGGame {
         if (rareItem.attack) this.player.attack += rareItem.attack;
         if (rareItem.defense) this.player.defense += rareItem.defense;
         
+        this.showEventModal('quest_reward');
         this.showMessage(this.currentBossData.defeatMessage);
         this.addMessage(`🎁 Tu obtiens l'objet légendaire : ${rareItem.name} !`);
         this.addMessage(`📜 ${rareItem.description}`);
@@ -775,12 +908,18 @@ class RPGGame {
 
     handleEnemyEncounter() {
         this.currentEnemy = this.getRandomEnemy();
+        const enemyType = Object.keys(enemies).find(key => 
+            enemies[key].name === this.currentEnemy.name
+        );
+        
+        this.showEventModal('combat', enemyType);
         this.showMessage(`${this.currentEnemy.name} apparaît ! Prépare-toi au combat, ${this.player.name} !`);
         this.changeGameState(GAME_STATES.COMBAT);
         this.updateEnemyUI();
     }
 
     handleTreasure() {
+        this.showEventModal('treasure');
         this.player.stats.treasuresFound++;
         
         const goldFound = Math.floor(Math.random() * 20) + 10;
@@ -800,6 +939,7 @@ class RPGGame {
     }
 
     handleMerchant() {
+        this.showEventModal('merchant');
         const merchantGold = Math.floor(Math.random() * 20) + 5;
         this.player.gold += merchantGold;
         this.showMessage(`${this.player.name}, un marchand mystérieux te donne ${merchantGold} pièces d'or !`);
@@ -808,6 +948,7 @@ class RPGGame {
     }
 
     handlePotionFind() {
+        this.showEventModal('potion');
         const potionTypes = ['Potion de soin', 'Grande potion'];
         const foundPotion = potionTypes[Math.floor(Math.random() * potionTypes.length)];
         this.player.inventory.push(foundPotion);
@@ -817,6 +958,7 @@ class RPGGame {
     }
 
     handleTrap() {
+        this.showEventModal('trap');
         const damage = Math.floor(Math.random() * 15) + 5;
         this.player.health = Math.max(0, this.player.health - damage);
         this.showMessage(`${this.player.name}, tu tombes dans un piège ! Tu perds ${damage} PV.`);
@@ -829,6 +971,7 @@ class RPGGame {
     }
 
     handleRestArea() {
+        this.showEventModal('rest');
         const healAmount = Math.floor(this.player.maxHealth * 0.3);
         this.player.health = Math.min(this.player.maxHealth, this.player.health + healAmount);
         this.showMessage(`${this.player.name}, tu te reposes et récupères ${healAmount} PV.`);
@@ -837,6 +980,7 @@ class RPGGame {
     }
 
     handleNothing() {
+        this.showEventModal('nothing');
         const messages = [
             `${this.player.name} avance prudemment...`,
             `Le vent souffle doucement...`,
@@ -848,6 +992,7 @@ class RPGGame {
 
     handleGameOver() {
         this.hideAllButtons();
+        this.showEventModal('game_over');
         this.showMessage(`${this.player.name} est mort... Ton aventure se termine ici.`);
         this.changeGameState(GAME_STATES.GAME_OVER);
     }
@@ -1049,6 +1194,7 @@ class RPGGame {
             if (chance < 0.7) {
                 this.meetQuestGiver();
             } else {
+                this.showEventModal('no_quest');
                 this.showMessage(`${this.player.name}, tu ne trouves personne ayant besoin d'aide pour le moment.`);
             }
         }, 1500);
@@ -1058,6 +1204,7 @@ class RPGGame {
         const availableQuest = this.getAvailableQuest();
         
         if (!availableQuest) {
+            this.showEventModal('no_quest');
             this.showMessage(`Tu as déjà assez de missions pour le moment, ${this.player.name}. Reviens plus tard !`);
             return;
         }
@@ -1095,6 +1242,7 @@ class RPGGame {
             `;
             
             acceptBtn.addEventListener('click', () => {
+                this.showEventModal('quest_given');
                 this.activeQuests.push(availableQuest);
                 this.showMessage(`Mission acceptée ! ${this.player.name}, tu peux voir tes quêtes actives dans le panneau ci-dessus.`);
                 this.showNotification('Nouvelle mission !');
