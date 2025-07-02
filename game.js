@@ -1404,6 +1404,20 @@ class RPGGame {
 // ========== INITIALISATION GLOBALE ==========
 let gameInstance = null;
 
+// ========== FONCTIONS GLOBALES POUR COMPATIBILITÉ ==========
+function closeEventModal() {
+    console.log('closeEventModal() appelée');
+    const modal = document.getElementById('eventModal');
+    if (modal) {
+        modal.style.display = 'none';
+    } else if (gameInstance && gameInstance.closeEventModal) {
+        gameInstance.closeEventModal();
+    }
+}
+
+// Autres fonctions globales si nécessaire
+window.closeEventModal = closeEventModal;
+
 function initializeGame() {
     try {
         if (gameInstance) {
