@@ -387,6 +387,7 @@ class RPGGame {
 
     // ========== SYSTÈME DE MODALS ==========
     showEventModal(eventType, subType = null) {
+        console.log('Tentative d\'affichage modal:', eventType, subType);
         this.ensureModalExists();
         
         const overlay = document.getElementById('eventModal');
@@ -402,6 +403,7 @@ class RPGGame {
 
         // Données par défaut pour chaque type d'événement
         const eventData = this.getEventData(eventType, subType);
+        console.log('Données du modal:', eventData);
 
         try {
             imageContainer.innerHTML = `<div style="width: 100%; height: 200px; background: ${eventData.bgColor}; border-radius: 15px; 
@@ -414,6 +416,7 @@ class RPGGame {
             title.textContent = eventData.title;
             description.textContent = eventData.description;
             overlay.style.display = 'flex';
+            console.log('Modal affiché avec succès');
         } catch (error) {
             console.error('Erreur lors de l\'affichage du modal:', error);
         }
@@ -454,6 +457,7 @@ class RPGGame {
 
     ensureModalExists() {
         if (!document.getElementById('eventModal')) {
+            console.log('Création du modal...');
             const modalHTML = `
                 <div id="eventModal" class="modal-overlay" style="
                     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -461,12 +465,13 @@ class RPGGame {
                     justify-content: center; z-index: 1000;">
                     <div id="eventModalContent" class="modal-content" style="
                         background: white; padding: 20px; border-radius: 15px;
-                        max-width: 500px; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        max-width: 500px; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                        position: relative;">
                         <div class="modal-header">
                             <h3 id="modalTitle" class="modal-title" style="margin: 0 0 10px 0;">Titre de l'événement</h3>
                             <button id="modalCloseBtn" class="modal-close" style="
-                                float: right; background: none; border: none; font-size: 24px; 
-                                cursor: pointer; position: absolute; top: 10px; right: 15px;">×</button>
+                                position: absolute; top: 10px; right: 15px; background: none; 
+                                border: none; font-size: 24px; cursor: pointer;">×</button>
                         </div>
                         <div class="modal-body">
                             <div id="modalImageContainer" class="modal-image-container"></div>
@@ -481,6 +486,7 @@ class RPGGame {
                 </div>
             `;
             document.body.insertAdjacentHTML('beforeend', modalHTML);
+            console.log('Modal créé, ajout des event listeners...');
             
             // Ajouter les event listeners pour fermer le modal
             const closeBtn = document.getElementById('modalCloseBtn');
@@ -489,12 +495,14 @@ class RPGGame {
             
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
+                    console.log('Fermeture modal via bouton X');
                     modal.style.display = 'none';
                 });
             }
             
             if (continueBtn) {
                 continueBtn.addEventListener('click', () => {
+                    console.log('Fermeture modal via bouton continuer');
                     modal.style.display = 'none';
                 });
             }
@@ -502,9 +510,14 @@ class RPGGame {
             // Fermer en cliquant à l'extérieur
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
+                    console.log('Fermeture modal via clic extérieur');
                     modal.style.display = 'none';
                 }
             });
+            
+            console.log('Modal et event listeners créés avec succès');
+        } else {
+            console.log('Modal déjà existant');
         }
     }
 
@@ -1376,12 +1389,15 @@ class RPGGame {
 
     // ========== INITIALISATION ==========
     initialize() {
+        console.log('Initialisation du jeu...');
         this.initializeDOMElements();
         this.setupEventListeners();
+        this.ensureModalExists(); // ✅ Créer les modals dès l'initialisation
         this.updateUI();
         this.updateQuestDisplay();
         this.changeGameState(GAME_STATES.EXPLORING);
         this.showNameModal();
+        console.log('Jeu initialisé avec succès !');
     }
 }
 
@@ -1395,9 +1411,23 @@ function initializeGame() {
         }
         gameInstance = new RPGGame();
         
+        // Test des modals pour vérifier qu'ils fonctionnent
+        setTimeout(() => {
+            console.log('Test des modals...');
+            if (gameInstance && typeof gameInstance.showEventModal === 'function') {
+                console.log('La fonction showEventModal existe');
+                // Test simple d'un modal
+                gameInstance.showEventModal('treasure');
+            } else {
+                console.error('La fonction showEventModal n\'existe pas');
+            }
+        }, 2000);
+        
         // Pour le debug
         window.game = gameInstance;
+        window.testModal = () => gameInstance.showEventModal('treasure');
         console.log('Jeu initialisé avec succès !');
+        console.log('Pour tester un modal, tapez: testModal() dans la console');
         
     } catch (error) {
         console.error('Erreur initialisation:', error);
