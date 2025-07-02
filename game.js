@@ -469,7 +469,7 @@ class RPGGame {
                         max-width: 500px; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                         <div class="modal-header">
                             <h3 id="modalTitle" class="modal-title">Titre de l'événement</h3>
-                            <button class="modal-close" onclick="document.getElementById('eventModal').style.display='none'" style="
+                            <button id="modalCloseBtn" class="modal-close" style="
                                 float: right; background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
                         </div>
                         <div class="modal-body">
@@ -477,7 +477,7 @@ class RPGGame {
                             <p id="modalDescription" class="modal-description">Description de l'événement</p>
                         </div>
                         <div class="modal-footer">
-                            <button class="modal-button" onclick="document.getElementById('eventModal').style.display='none'" style="
+                            <button id="modalContinueBtn" class="modal-button" style="
                                 background: #3498db; color: white; border: none; padding: 10px 20px;
                                 border-radius: 5px; cursor: pointer;">Continuer l'aventure</button>
                         </div>
@@ -485,6 +485,30 @@ class RPGGame {
                 </div>
             `;
             document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Ajouter les event listeners pour fermer le modal
+            const closeBtn = document.getElementById('modalCloseBtn');
+            const continueBtn = document.getElementById('modalContinueBtn');
+            const modal = document.getElementById('eventModal');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            if (continueBtn) {
+                continueBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            // Fermer en cliquant à l'extérieur
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         }
     }
 
