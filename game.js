@@ -466,21 +466,24 @@ class RPGGame {
                     <div id="eventModalContent" class="modal-content" style="
                         background: white; padding: 20px; border-radius: 15px;
                         max-width: 500px; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                        position: relative;">
-                        <div class="modal-header">
-                            <h3 id="modalTitle" class="modal-title" style="margin: 0 0 10px 0;">Titre de l'événement</h3>
+                        position: relative; z-index: 1001;">
+                        <div class="modal-header" style="position: relative;">
+                            <h3 id="modalTitle" class="modal-title" style="margin: 0 0 10px 0; padding-right: 30px;">Titre de l'événement</h3>
                             <button id="modalCloseBtn" class="modal-close" style="
-                                position: absolute; top: 10px; right: 15px; background: none; 
-                                border: none; font-size: 24px; cursor: pointer;">×</button>
+                                position: absolute; top: 0; right: 0; background: #e74c3c; 
+                                border: none; font-size: 18px; cursor: pointer; color: white;
+                                width: 25px; height: 25px; border-radius: 50%; display: flex;
+                                align-items: center; justify-content: center;">×</button>
                         </div>
                         <div class="modal-body">
                             <div id="modalImageContainer" class="modal-image-container"></div>
-                            <p id="modalDescription" class="modal-description">Description de l'événement</p>
+                            <p id="modalDescription" class="modal-description" style="margin: 10px 0;">Description de l'événement</p>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer" style="text-align: center; margin-top: 20px;">
                             <button id="modalContinueBtn" class="modal-button" style="
-                                background: #3498db; color: white; border: none; padding: 10px 20px;
-                                border-radius: 5px; cursor: pointer; font-weight: bold;">Continuer l'aventure</button>
+                                background: #3498db; color: white; border: none; padding: 12px 24px;
+                                border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;
+                                transition: background 0.3s ease; z-index: 1002; position: relative;">Continuer l'aventure</button>
                         </div>
                     </div>
                 </div>
@@ -488,37 +491,80 @@ class RPGGame {
             document.body.insertAdjacentHTML('beforeend', modalHTML);
             console.log('Modal créé, ajout des event listeners...');
             
-            // Ajouter les event listeners pour fermer le modal
-            const closeBtn = document.getElementById('modalCloseBtn');
-            const continueBtn = document.getElementById('modalContinueBtn');
-            const modal = document.getElementById('eventModal');
+            // Attendre un petit délai pour s'assurer que le DOM est mis à jour
+            setTimeout(() => {
+                this.attachModalEventListeners();
+            }, 100);
             
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    console.log('Fermeture modal via bouton X');
-                    modal.style.display = 'none';
-                });
-            }
+            console.log('Modal et event listeners créés avec succès');
+        } else {
+            console.log('Modal déjà existant, vérification des event listeners...');
+            this.attachModalEventListeners();
+        }
+    }
+
+    attachModalEventListeners() {
+        const closeBtn = document.getElementById('modalCloseBtn');
+        const continueBtn = document.getElementById('modalContinueBtn');
+        const modal = document.getElementById('eventModal');
+        
+        console.log('Attachement des event listeners...', { closeBtn, continueBtn, modal });
+        
+        // Supprimer les anciens listeners s'ils existent
+        if (closeBtn) {
+            closeBtn.replaceWith(closeBtn.cloneNode(true));
+            const newCloseBtn = document.getElementById('modalCloseBtn');
+            newCloseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Fermeture modal via bouton X');
+                modal.style.display = 'none';
+            });
             
-            if (continueBtn) {
-                continueBtn.addEventListener('click', () => {
-                    console.log('Fermeture modal via bouton continuer');
-                    modal.style.display = 'none';
-                });
-            }
+            // Effet hover pour le bouton close
+            newCloseBtn.addEventListener('mouseenter', () => {
+                newCloseBtn.style.background = '#c0392b';
+            });
+            newCloseBtn.addEventListener('mouseleave', () => {
+                newCloseBtn.style.background = '#e74c3c';
+            });
+        }
+        
+        if (continueBtn) {
+            // Cloner le bouton pour supprimer les anciens event listeners
+            continueBtn.replaceWith(continueBtn.cloneNode(true));
+            const newContinueBtn = document.getElementById('modalContinueBtn');
             
-            // Fermer en cliquant à l'extérieur
+            newContinueBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Fermeture modal via bouton continuer');
+                modal.style.display = 'none';
+            });
+            
+            // Effets hover pour le bouton continuer
+            newContinueBtn.addEventListener('mouseenter', () => {
+                newContinueBtn.style.background = '#2980b9';
+                newContinueBtn.style.transform = 'scale(1.05)';
+            });
+            
+            newContinueBtn.addEventListener('mouseleave', () => {
+                newContinueBtn.style.background = '#3498db';
+                newContinueBtn.style.transform = 'scale(1)';
+            });
+        }
+        
+        // Fermer en cliquant à l'extérieur (mais pas sur le contenu)
+        if (modal) {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     console.log('Fermeture modal via clic extérieur');
                     modal.style.display = 'none';
                 }
             });
-            
-            console.log('Modal et event listeners créés avec succès');
-        } else {
-            console.log('Modal déjà existant');
         }
+        
+        console.log('Event listeners attachés avec succès');
     }
 
     closeEventModal() {
