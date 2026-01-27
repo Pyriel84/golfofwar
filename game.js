@@ -56,7 +56,7 @@ const levelBosses = {
             defense: 8,
             description: 'Une armure qui régénère la santé'
         },
-        defeatMessage: 'Le Gardien retourne dormir paisiblement.'
+        defeatMessage: 'Le Gardien retourne à sa sieste.'
     }
 };
 
@@ -435,9 +435,9 @@ class RPGGame {
             levelup: { emoji: '⭐', bgColor: '#9b59b6', title: 'NIVEAU SUPÉRIEUR !', description: 'Tu gagnes en puissance !' },
             potion: { emoji: '🧪', bgColor: '#1abc9c', title: 'Potion Trouvée !', description: 'Une potion mystérieuse qui pourrait t\'aider !' },
             merchant: { emoji: '🧙‍♂️', bgColor: '#3498db', title: 'Marchand Mystérieux !', description: 'Un marchand apparaît et te propose des objets !' },
-            trap: { emoji: '⚠️', bgColor: '#e67e22', title: 'Piège Mortel !', description: 'Tu tombes dans un piège ! Fais attention !' },
+            trap: { emoji: '⚠️', bgColor: '#e67e22', title: 'Piège Mortel !', description: 'Tu tombes dans un piège comme une merde !' },
             rest: { emoji: '🏕️', bgColor: '#27ae60', title: 'Repos Bien Mérité !', description: 'Tu trouves un endroit paisible pour te reposer.' },
-            nothing: { emoji: '🌫️', bgColor: '#95a5a6', title: 'Rien Trouvé !', description: 'Tu fouilles les lieux, mais ne trouves rien d\'utile.' },
+            nothing: { emoji: '🌫️', bgColor: '#95a5a6', title: 'Rien Trouvé !', description: 'Tu fouilles les lieux, mais y a que dale.' },
             boss: { emoji: '👑', bgColor: '#8e44ad', title: 'Un Boss Apparait !', description: 'Un puissant boss se dresse devant toi !' },
             game_over: { emoji: '💀', bgColor: '#c0392b', title: 'Jeu Terminé !', description: 'Tu as perdu... Recommence ton aventure !' },
             quest_given: { emoji: '📜', bgColor: '#3498db', title: 'Nouvelle Mission !', description: 'Un PNJ t\'a confié une mission importante !' },
